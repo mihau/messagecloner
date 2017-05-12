@@ -48,11 +48,12 @@ class Cloner(object):
         self.target_queue.put(body)
         msg.ack()
 
-    def clone(self):
-        with Connection(self.source_broker_url) as src_conn, Connection(self.target_broker_url, transport_options=self.target_transport_options) as dst_conn:
-            self._setup_queues(src_conn, dst_conn)
-            src_channel = src_conn.channel()
-            self.target_queue.put({'test': 'ting'})
-            with Consumer(src_channel, self.intermediate_queue, callbacks=[self.copy_message]):
-                while True:
-                    src_conn.drain_events()
+    def clone(self, src_conn, dst_conn):
+        self._setup_queues(src_conn, dst_conn)
+        src_channel = src_conn.channel()
+        self.target_queue.put({'test': 'ting'})
+        Consumer(
+            src_channel,
+            self.intermediate_queue,
+            callbacks=[self.copy_message],
+        ).consume()
