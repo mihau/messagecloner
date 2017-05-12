@@ -1,6 +1,6 @@
 import logging
 
-from kombu import Queue, Connection, Consumer, Exchange
+from kombu import Queue, Consumer, Exchange
 
 
 logger = logging.getLogger(__name__)
@@ -11,13 +11,12 @@ logging.getLogger("kombu").setLevel(logging.WARNING)
 class Cloner(object):
     def __init__(self, source_broker_url, target_broker_url,
                  source_exchange_name, target_queue_name,
-                 target_transport_options=None, intermediate_queue_name=None):
+                 intermediate_queue_name=None):
 
         self.source_broker_url = source_broker_url
         self.target_broker_url = target_broker_url
         self.source_exchange_name = source_exchange_name
         self.target_queue_name = target_queue_name
-        self.target_transport_options = target_transport_options
         self.intermediate_queue_name = (
             intermediate_queue_name or source_exchange_name + '_cloner'
         )
