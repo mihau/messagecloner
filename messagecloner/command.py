@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--source-transport-options', type=json.loads)
     parser.add_argument('--target-transport-options', type=json.loads)
     parser.add_argument('--exchange-queue-pair', nargs=2, action='append',
+                        metavar=('SRC_EXCHANGE', 'TARGET_QUEUE'),
                         required=True)
     parser.add_argument("-v", "--verbose", help="increase output verbosity",
                         action="store_true")

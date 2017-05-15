@@ -14,8 +14,7 @@ and `TARGET_BROKER_CREDENTIALS` environment variables as `user:password`.
     usage: messagecloner [-h]
                          [--source-transport-options SOURCE_TRANSPORT_OPTIONS]
                          [--target-transport-options TARGET_TRANSPORT_OPTIONS]
-                         --exchange-queue-pair EXCHANGE_QUEUE_PAIR
-                         EXCHANGE_QUEUE_PAIR [-v]
+                         --exchange-queue-pair SRC_EXCHANGE TARGET_QUEUE [-v]
                          source_broker_url target_broker_url
 
     Message cloner.
@@ -28,7 +27,7 @@ and `TARGET_BROKER_CREDENTIALS` environment variables as `user:password`.
       -h, --help            show this help message and exit
       --source-transport-options SOURCE_TRANSPORT_OPTIONS
       --target-transport-options TARGET_TRANSPORT_OPTIONS
-      --exchange-queue-pair EXCHANGE_QUEUE_PAIR EXCHANGE_QUEUE_PAIR
+      --exchange-queue-pair SRC_EXCHANGE TARGET_QUEUE
       -v, --verbose         increase output verbosity
 
 ### Example:
