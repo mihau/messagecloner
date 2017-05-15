@@ -2,7 +2,9 @@
 Simple utility to copy messages from one message broker to another.
 
 The tool was created to allow creating copies of messages published to one
-broker and send them to another one (supported by kombu).
+broker and send them to another one (supported by kombu). It binds to specified
+exchanges on the source broker and publishes the messages to corresponding
+queues on the target broker.
 
 ## usage
 
@@ -25,3 +27,6 @@ broker and send them to another one (supported by kombu).
       --target-transport-options TARGET_TRANSPORT_OPTIONS
       --exchange-queue-pair EXCHANGE_QUEUE_PAIR EXCHANGE_QUEUE_PAIR
       -v, --verbose         increase output verbosity
+
+### Example:
+    messagecloner amqp://localhost:5672/my_vhost sqs:// --exchange-queue-pair my_first_exchange my_first_queue_clone --exchange-queue-pair my_second_exchange my_second_queue_clone --source-transport-options "{\"region\":\"us-east-1\"}"  -v
