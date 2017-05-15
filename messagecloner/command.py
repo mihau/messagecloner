@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 import json
+import os
 from contextlib import ExitStack
 
 from kombu import Connection
@@ -12,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-
     parser = argparse.ArgumentParser(description="Message cloner.")
     parser.add_argument('source_broker_url', help='address of source broker')
     parser.add_argument('target_broker_url', help='address of target broker')
@@ -22,6 +22,17 @@ def main():
                         required=True)
     parser.add_argument("-v", "--verbose", help="increase output verbosity",
                         action="store_true")
+
+    source_broker_credentials = os.getenv('SOURCE_BROKER_CREDENTIALS')
+    target_broker_credentials = os.getenv('TARGET_BROKER_CREDENTIALS')
+    source_user, source_password = (
+        source_broker_credentials.split(':') if source_broker_credentials
+        else (None, None)
+    )
+    target_user, target_password = (
+        target_broker_credentials.split(':') if target_broker_credentials
+        else (None, None)
+    )
 
     args = parser.parse_args()
 
@@ -35,25 +46,29 @@ def main():
             Connection(
                 args.source_broker_url,
                 transport_options=args.source_transport_options,
+                userid=source_user,
+                password=source_password,
             )
         )
         dst_conn = stack.enter_context(
             Connection(
                 args.target_broker_url,
                 transport_options=args.target_transport_options,
+                userid=target_user,
+                password=target_password,
             )
         )
 
         for source_exchange, target_queue in args.exchange_queue_pair:
             cloner = Cloner(
-                source_broker_url=args.source_broker_url,
-                target_broker_url=args.target_broker_url,
+                source_connection=src_conn,
+                target_connection=dst_conn,
                 source_exchange_name=source_exchange,
                 target_queue_name=target_queue,
             )
             logger.info('Setting up cloner: {}'.format(cloner))
 
-            cloner.clone(src_conn, dst_conn)
+            cloner.clone()
 
         logger.info('Starting cloners')
         while True:
