@@ -7,6 +7,9 @@ exchanges on the source broker and publishes the messages to corresponding
 queues on the target broker.
 
 ## usage
+For the usage please refer to `messagecloner --help`. Note that in addition it
+is possible to specify broker credentials by setting `SOURCE_BROKER_CREDENTIALS`
+and `TARGET_BROKER_CREDENTIALS` environment variables as `user:password`.
 
     usage: messagecloner [-h]
                          [--source-transport-options SOURCE_TRANSPORT_OPTIONS]
